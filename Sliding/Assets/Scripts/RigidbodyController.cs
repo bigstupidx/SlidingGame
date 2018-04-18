@@ -92,14 +92,8 @@ public class RigidbodyController : MonoBehaviour {
             gravityForce /= 1 + airDrag * Time.deltaTime;
             airForce /= 1 + airDrag * Time.deltaTime;
 
-
             flyingPivot.localEulerAngles = new Vector3(flyingPivot.localEulerAngles.x, flyingPivot.localEulerAngles.y, -Input.GetAxis("Horizontal") * 20);
-
-            
         }
-
-        
-        print("dddddddd");
 
         rigidbody.velocity = movement + slideDirection + airForce + gravity;
 
