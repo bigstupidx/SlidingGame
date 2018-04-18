@@ -337,12 +337,14 @@ MonoBehaviour:
   slideMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  flyingPivot: {fileID: 1782819590}
   moveSpeed: 80
   slidePower: 5
   slideDrag: 0
   gravityPower: 9
   airDrag: 0.2
   forwardRayDist: 1
+  frontFlipChance: 0
 --- !u!54 &64910356
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -368,7 +370,7 @@ Transform:
   m_LocalPosition: {x: 316, y: -2.05, z: -13.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 220002726}
+  - {fileID: 1782819590}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -575,13 +577,13 @@ Transform:
   m_PrefabParentObject: {fileID: 400072, guid: a9daf933f71fddc4db8bdd3c8f39db9c, type: 3}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 220002725}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 840785233}
   - {fileID: 377898454}
-  m_Father: {fileID: 64910357}
+  m_Father: {fileID: 1782819590}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &220002727
@@ -2538,6 +2540,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: -211.185, y: 0, z: 0}
+--- !u!1 &1782819589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1782819590}
+  m_Layer: 0
+  m_Name: FlyingPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1782819590
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1782819589}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 220002726}
+  m_Father: {fileID: 64910357}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809802011
 GameObject:
   m_ObjectHideFlags: 0
