@@ -8,6 +8,7 @@ public class RigidbodyController : MonoBehaviour {
     public LayerMask slideMask;
     public Transform flyingPivot;
     public float moveSpeed = 5;
+    public float jumpForce = 10;
     public float slidePower = 5;
     public float slideDrag = 0;
     public float gravityPower = 9;
@@ -28,7 +29,10 @@ public class RigidbodyController : MonoBehaviour {
 
     float gravityForce;
     float slideForce;
+    float enableJumpTimer;
+    float enableTime = 0.3f;
 
+    bool canJump;
     bool grounded;
     bool lastFrameGrounded;
     bool lastFrameFlying;
@@ -40,7 +44,7 @@ public class RigidbodyController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         SetGroundCondition();
 
         if (grounded)
@@ -50,10 +54,11 @@ public class RigidbodyController : MonoBehaviour {
                 slideForce = Vector3.ProjectOnPlane(airForce, hitNormal).magnitude;
                 airForce = Vector3.zero;
                 gravityForce = 0;                
-                rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+                //rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 anim.SetFloat("left", Random.value);
                 anim.SetBool("grounded", true);
                 anim.SetFloat("back", 0);
+                enableJumpTimer = 0;
             }
 
             slideForce += slidePower * Time.deltaTime;
@@ -63,14 +68,21 @@ public class RigidbodyController : MonoBehaviour {
 
             movement = Vector3.Cross(slideDirection.normalized, -transform.up).normalized * Input.GetAxis("Horizontal") * moveSpeed;
             anim.transform.localEulerAngles = new Vector3(anim.transform.localEulerAngles.x, Input.GetAxis("Horizontal") * 20, -Input.GetAxis("Horizontal") * 20);
-            gravity = -Vector3.up;
+            gravity = -transform.up;
 
-            if (Input.GetButtonDown("Jump"))
+            enableJumpTimer += Time.deltaTime;
+            if(enableJumpTimer > enableTime)
+            {
+                canJump = true;
+            }
+
+            if (Input.GetButtonDown("Jump") && canJump)
             {
                 anim.SetTrigger("jump");
                 anim.SetFloat("back", Random.value);
-                gravityForce = 10;
-                gravity.y = 10;
+                gravityForce = jumpForce;
+                gravity = transform.up * gravityForce;
+                canJump = false;
             }
 
         }
@@ -88,7 +100,7 @@ public class RigidbodyController : MonoBehaviour {
 
             gravityForce -= gravityPower * Time.deltaTime;
             airForce += transform.right * Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-            gravity = Vector3.up * gravityForce;
+            gravity = transform.up * gravityForce;
 
             gravityForce /= 1 + airDrag * Time.deltaTime;
             airForce /= 1 + airDrag * Time.deltaTime;
@@ -100,6 +112,8 @@ public class RigidbodyController : MonoBehaviour {
 
         lastFrameGrounded = grounded;
         lastFrameFlying = !grounded;
+
+
 	}
 
     void SetGroundCondition()
@@ -108,7 +122,10 @@ public class RigidbodyController : MonoBehaviour {
         RaycastHit frontHit;
 
         bool down = Physics.Raycast(transform.position, -transform.up, out downHit, 1.1f, slideMask);
-        bool up = Physics.Raycast(transform.position + transform.forward * forwardRayDist, -transform.up, out frontHit, 2, slideMask);
+        bool up = Physics.Raycast(transform.position + transform.forward * forwardRayDist, -transform.up, out frontHit, 2f, slideMask);
+
+        Debug.DrawRay(transform.position, -transform.up * 1.1f, Color.red);
+        Debug.DrawRay(transform.position + transform.forward * forwardRayDist, -transform.up * 2, Color.blue);
 
         if (down && up)
         {
@@ -116,13 +133,17 @@ public class RigidbodyController : MonoBehaviour {
             grounded = true;
             hitNormal = downHit.normal;
             transform.up = hitNormal;
+
+            Debug.DrawRay(downHit.point, slideDirection * 5, Color.green);
         }
         else
         {
-            if(!down && !up)
-                rigidbody.constraints = RigidbodyConstraints.None;
+            //if(!down && !up)
+            //    rigidbody.constraints = RigidbodyConstraints.None;
 
             grounded = false;
         }
+
+
     }
 }
