@@ -53,6 +53,7 @@ public class RigidbodyController : MonoBehaviour {
                 rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 anim.SetFloat("left", Random.value);
                 anim.SetBool("grounded", true);
+                anim.SetFloat("back", 0);
             }
 
             slideForce += slidePower * Time.deltaTime;
@@ -67,6 +68,7 @@ public class RigidbodyController : MonoBehaviour {
             if (Input.GetButtonDown("Jump"))
             {
                 anim.SetTrigger("jump");
+                anim.SetFloat("back", Random.value);
                 gravityForce = 10;
                 gravity.y = 10;
             }
@@ -82,7 +84,6 @@ public class RigidbodyController : MonoBehaviour {
                 movement = Vector3.zero;
                 anim.transform.localEulerAngles = Vector3.zero;
                 anim.SetBool("grounded", false);
-                anim.SetFloat("back", Random.value);
             }
 
             gravityForce -= gravityPower * Time.deltaTime;
