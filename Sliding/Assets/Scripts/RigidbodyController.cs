@@ -132,8 +132,7 @@ public class RigidbodyController : MonoBehaviour {
             slideDirection = (frontHit.point - downHit.point).normalized;
             grounded = true;
             hitNormal = downHit.normal;
-            transform.up = hitNormal;
-
+            transform.rotation = Quaternion.LookRotation(slideDirection, hitNormal);
             Debug.DrawRay(downHit.point, slideDirection * 5, Color.green);
         }
         else
