@@ -159,7 +159,7 @@ public class SlidingController : MonoBehaviour
             sliding = true;
 
             hitNormal = downHit.normal;
-            //transform.up = frontHit.normal;
+            transform.up = frontHit.normal;
         }        
         else 
         {

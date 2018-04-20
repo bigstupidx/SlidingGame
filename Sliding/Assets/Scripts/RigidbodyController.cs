@@ -8,14 +8,13 @@ public class RigidbodyController : MonoBehaviour {
     public LayerMask slideMask;
     public Transform flyingPivot;
     public float moveSpeed = 5;
+    public float airSpeed = 15;
     public float jumpForce = 10;
     public float slidePower = 5;
     public float slideDrag = 0;
     public float gravityPower = 9;
     public float airDrag = 0.2f;
     public float forwardRayDist = 1;
-    [Range(0, 1)]
-    public float frontFlipChance = 0;
 
     //Private
     new Rigidbody rigidbody;
@@ -44,7 +43,7 @@ public class RigidbodyController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
         SetGroundCondition();
 
         if (grounded)
@@ -54,8 +53,7 @@ public class RigidbodyController : MonoBehaviour {
                 slideForce = Vector3.ProjectOnPlane(airForce, hitNormal).magnitude;
                 airForce = Vector3.zero;
                 gravityForce = 0;                
-                //rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-                anim.SetFloat("left", Random.value);
+                anim.SetFloat("left", Random.Range(0.06f,1));
                 anim.SetBool("grounded", true);
                 anim.SetFloat("back", 0);
                 enableJumpTimer = 0;
@@ -66,7 +64,8 @@ public class RigidbodyController : MonoBehaviour {
             
             slideDirection *= slideForce;
 
-            movement = Vector3.Cross(slideDirection.normalized, -transform.up).normalized * Input.GetAxis("Horizontal") * moveSpeed;
+            //movement = Vector3.Cross(slideDirection.normalized, -transform.up).normalized * Input.GetAxis("Horizontal") * moveSpeed;
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed, transform.localEulerAngles.z);
             anim.transform.localEulerAngles = new Vector3(anim.transform.localEulerAngles.x, Input.GetAxis("Horizontal") * 20, -Input.GetAxis("Horizontal") * 20);
             gravity = -transform.up;
 
@@ -84,7 +83,6 @@ public class RigidbodyController : MonoBehaviour {
                 gravity = transform.up * gravityForce;
                 canJump = false;
             }
-
         }
         else
         {
@@ -99,7 +97,7 @@ public class RigidbodyController : MonoBehaviour {
             }
 
             gravityForce -= gravityPower * Time.deltaTime;
-            airForce += transform.right * Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+            airForce += transform.right * Input.GetAxis("Horizontal") * airSpeed * Time.deltaTime;
             gravity = transform.up * gravityForce;
 
             gravityForce /= 1 + airDrag * Time.deltaTime;
@@ -112,8 +110,6 @@ public class RigidbodyController : MonoBehaviour {
 
         lastFrameGrounded = grounded;
         lastFrameFlying = !grounded;
-
-
 	}
 
     void SetGroundCondition()
@@ -137,9 +133,6 @@ public class RigidbodyController : MonoBehaviour {
         }
         else
         {
-            //if(!down && !up)
-            //    rigidbody.constraints = RigidbodyConstraints.None;
-
             grounded = false;
         }
 
