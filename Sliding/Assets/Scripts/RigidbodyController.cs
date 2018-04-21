@@ -28,10 +28,7 @@ public class RigidbodyController : MonoBehaviour {
 
     float gravityForce;
     float slideForce;
-    float enableJumpTimer;
-    float enableTime = 0.3f;
 
-    bool canJump;
     bool grounded;
     bool lastFrameGrounded;
     bool lastFrameFlying;
@@ -56,7 +53,6 @@ public class RigidbodyController : MonoBehaviour {
                 anim.SetFloat("left", Random.Range(0.06f,1));
                 anim.SetBool("grounded", true);
                 anim.SetFloat("back", 0);
-                enableJumpTimer = 0;
             }
 
             slideForce += slidePower * Time.deltaTime;
@@ -67,21 +63,14 @@ public class RigidbodyController : MonoBehaviour {
             //movement = Vector3.Cross(slideDirection.normalized, -transform.up).normalized * Input.GetAxis("Horizontal") * moveSpeed;
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed, transform.localEulerAngles.z);
             anim.transform.localEulerAngles = new Vector3(anim.transform.localEulerAngles.x, Input.GetAxis("Horizontal") * 20, -Input.GetAxis("Horizontal") * 20);
-            gravity = -transform.up;
+            gravity = -transform.up;           
 
-            enableJumpTimer += Time.deltaTime;
-            if(enableJumpTimer > enableTime)
-            {
-                canJump = true;
-            }
-
-            if (Input.GetButtonDown("Jump") && canJump)
+            if (Input.GetButtonDown("Jump"))
             {
                 anim.SetTrigger("jump");
                 anim.SetFloat("back", Random.value);
                 gravityForce = jumpForce;
                 gravity = transform.up * gravityForce;
-                canJump = false;
             }
         }
         else
