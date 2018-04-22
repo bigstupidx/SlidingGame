@@ -4,27 +4,37 @@ using UnityEngine;
 
 public class ThirdPersonCamera : MonoBehaviour {
 
-    public Transform player;
+    //Public
+    public Transform target;
     public float distance = 5;
     public float height = 2;
     public float smoothing = 0.125f;
 
-    private Rigidbody rb;
+    [HideInInspector]
+    public bool lookAt;
+    //Private
 
 	// Use this for initialization
 	void Start () {
-        rb = player.GetComponent<Rigidbody>();        
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if(!lookAt)
+        {
+            Vector3 desiredPosition = target.position - target.forward * distance + target.up * height;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothing);
+            transform.position = smoothedPosition;
 
-        Vector3 desiredPosition = rb.position - player.forward * distance + player.up * height;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothing);
-        transform.position = smoothedPosition;
-
-        Quaternion targetRotation = Quaternion.LookRotation(rb.position - transform.position, player.up);
-        Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, targetRotation, smoothing);
-        transform.rotation = smoothedRotation;
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
+            Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, targetRotation, smoothing);
+            transform.rotation = smoothedRotation;
+        }
+        else
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+            Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, targetRotation, smoothing);
+            transform.rotation = smoothedRotation;
+        }
     }
 }

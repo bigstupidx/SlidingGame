@@ -34,7 +34,7 @@ public class RigidbodyController : MonoBehaviour {
     bool lastFrameFlying;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         rigidbody = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
 	}
