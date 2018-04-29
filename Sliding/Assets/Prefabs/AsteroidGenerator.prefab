@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1299139739729216}
+  m_IsPrefabParent: 1
+--- !u!1 &1299139739729216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4244534879276044}
+  - component: {fileID: 114471795098640010}
+  m_Layer: 0
+  m_Name: AsteroidGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4244534879276044
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1299139739729216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.4, y: -3.3, z: 125.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114471795098640010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1299139739729216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ed8bdee50eb684383561d84f434e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asteroids:
+  - {fileID: 1135915388689424, guid: 0232e6964540bf1449d6345f825057e1, type: 2}
+  - {fileID: 1754116157896648, guid: 0a3efe9d4e508804586f4f8c4bd6e368, type: 2}
+  - {fileID: 1297470973784726, guid: ebc1b2c7242baec41baee9d6eea28c28, type: 2}
+  - {fileID: 1231976404964042, guid: f62cab65f11ae2e49bb3ab7cce45905e, type: 2}
+  - {fileID: 1358045877943014, guid: c4801883344709f4ea6770b5bc0c2246, type: 2}
+  - {fileID: 1064519275760328, guid: 1790d88a604f1484392d9360babc88be, type: 2}
+  - {fileID: 1383139138047582, guid: 902c6a7f1b15f884f8d30a4acc1ecf30, type: 2}
+  - {fileID: 1065052122264344, guid: 518f60a4531d8884890b6c2d0a9d31bc, type: 2}
+  - {fileID: 1162002661157940, guid: 6c7532c962c58a344a499a13d1b40ea9, type: 2}
+  asteroidAmount: 10
+  maxDistance: 40
+  minScale: 0.2
+  maxScale: 2
