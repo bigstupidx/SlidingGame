@@ -21,6 +21,12 @@ public class SkatePosition : MonoBehaviour {
         startingPosition = transform.localPosition;
 	}
 
+    public void DetachSkate()
+    {
+        StopCoroutine(currentRoutine);
+        transform.parent = null;
+    }
+
     public void BounceSkate()
     {
         if(currentRoutine != null)

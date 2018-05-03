@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
     RigidbodyController playerController;
     Rigidbody playerRb;
     Animator playerAnimator;
+    SkatePosition skate;
     new ThirdPersonCamera camera;
 
     bool deathTrigger = true;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour {
         playerController = player.GetComponent<RigidbodyController>();
         playerRb = player.GetComponent<Rigidbody>();
         playerAnimator = player.GetComponentInChildren<Animator>();
+        skate = player.GetComponentInChildren<SkatePosition>();
         camera = Camera.main.GetComponent<ThirdPersonCamera>();
     }
 	
@@ -45,6 +47,8 @@ public class GameManager : MonoBehaviour {
         playerController.enabled = false;
         camera.lookAt = true;
         camera.target = ragdoll[1].transform;
+
+        skate.DetachSkate();
 
         foreach(Rigidbody r in ragdoll)
         {

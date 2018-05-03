@@ -19,13 +19,17 @@ public class PlayerCollisions : MonoBehaviour {
         }
         else
         {
-            Vector3 collisionPoint = collision.contacts[0].point;
-            Vector3 dir = (collisionPoint - transform.position).normalized;
-
-            if (Vector3.Dot(dir, -transform.up) < 0.8f)
+            foreach(ContactPoint c in collision.contacts)
             {
-                GameManager.Instance.isDead = true;
-            }           
+                var relativePosition = transform.InverseTransformPoint(c.point);
+
+                if (relativePosition.y >= -0.5f)
+                {
+                    GameManager.Instance.isDead = true;
+                }
+            }
+            
+
         }
     }
 }
