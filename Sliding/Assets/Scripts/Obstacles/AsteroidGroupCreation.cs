@@ -8,11 +8,11 @@ public class AsteroidGroupCreation : MonoBehaviour {
     public List<GameObject> asteroids;
 
     public int asteroidAmount;
-    public float maxDistance;
+    public Vector3 spawnArea;
     public float minScale;
     public float maxScale;
 
-
+    
 
     List<GameObject> oldAsteroids = new List<GameObject>();
 	// Use this for initialization
@@ -38,11 +38,16 @@ public class AsteroidGroupCreation : MonoBehaviour {
             clone.transform.parent = this.transform;
             float randomScale = Random.Range(minScale, maxScale);
             clone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-            clone.transform.localPosition = new Vector3(Random.Range(-maxDistance, maxDistance), Random.Range(-maxDistance, maxDistance), Random.Range(-maxDistance, maxDistance));
+            clone.transform.localPosition = new Vector3(Random.Range(-spawnArea.x, spawnArea.x), Random.Range(-spawnArea.y, spawnArea.y), Random.Range(-spawnArea.z, spawnArea.z));
             clone.transform.localEulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
             oldAsteroids.Add(clone);
         }
         
         
 	}
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(transform.position, spawnArea);
+    }
 }

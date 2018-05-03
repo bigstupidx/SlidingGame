@@ -7,8 +7,9 @@ public class MapGenerator : MonoBehaviour {
 
     //Public
     public Module startingModule;
-    public List<Module> tiles;
+    public List<Module> platforms;
     public Transform player;
+    public ObjectPooler pooler;
 
     //Private
     List<Module> oldModules = new List<Module>();
@@ -17,7 +18,7 @@ public class MapGenerator : MonoBehaviour {
 
     int currentLevel = 1;
     // Use this for initialization
-    void Start () {
+    void Awake () {
         currentModule = Instantiate(startingModule, Vector3.zero, Quaternion.identity);
     }
 
@@ -26,40 +27,19 @@ public class MapGenerator : MonoBehaviour {
 
         if (Vector3.Distance(player.position, currentModule.transform.position) < 80)
         {
-            chosenModules = tiles.Where(x => x.level == currentLevel).ToArray();
-            Module newModule = Instantiate(chosenModules[Random.Range(0, chosenModules.Length)], Vector3.zero, Quaternion.identity);
-            MatchExits(newModule, newModule.GetEntry(), currentModule.GetExit());
+            Module newModule = pooler.GetObject(currentLevel);
+            newModule.transform.rotation = currentModule.GetExit().rotation;
+            newModule.transform.position = currentModule.GetExit().position;
             oldModules.Add(currentModule);
             currentModule = newModule;
 
             if (oldModules.Count > 3)
             {
-                Destroy(oldModules[0].gameObject);
+                pooler.AddObject(oldModules[0]);
                 oldModules.RemoveAt(0);
             }
 
         }
     }
-
-    void MatchExits(Module newModule, Transform newEntry, Transform oldExit)
-    {
-        if (oldExit.transform.forward == newEntry.transform.forward)
-        {
-            newModule.transform.Rotate(newEntry.transform.up, 30);
-        }
-
-        Quaternion rotZ = Quaternion.FromToRotation(newEntry.transform.forward, -oldExit.transform.forward);
-        newModule.transform.rotation = rotZ * newModule.transform.rotation;
-
-        if (oldExit.transform.up == -newEntry.transform.up)
-        {
-            newModule.transform.Rotate(newEntry.transform.forward, 30);
-        }
-
-        Quaternion rotY = Quaternion.FromToRotation(newEntry.transform.up, oldExit.transform.up);
-        newModule.transform.rotation = rotY * newModule.transform.rotation;
-       
-        Vector3 translation = oldExit.position - newEntry.position;
-        newModule.transform.position += translation;
-    }
+    
 }

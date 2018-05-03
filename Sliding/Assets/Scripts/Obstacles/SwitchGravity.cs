@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwitchGravity : MonoBehaviour {
+public class SwitchGravity : MonoBehaviour, IInitializable {
 
     bool trigger;
+
+    public void Initialize()
+    {
+        trigger = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

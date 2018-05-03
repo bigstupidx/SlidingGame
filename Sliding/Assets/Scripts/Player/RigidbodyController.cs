@@ -5,6 +5,7 @@ using UnityEngine;
 public class RigidbodyController : MonoBehaviour {
 
     //Public
+    public SkatePosition skate;
     public LayerMask slideMask;
     public Transform flyingPivot;
     public float moveSpeed = 5;
@@ -19,7 +20,8 @@ public class RigidbodyController : MonoBehaviour {
     //Private
     new Rigidbody rigidbody;
     Animator anim;
-
+    CapsuleCollider col;
+    
     Vector3 movement;
     Vector3 gravity;
     Vector3 slideDirection;
@@ -38,6 +40,7 @@ public class RigidbodyController : MonoBehaviour {
     void Awake () {
         rigidbody = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        col = GetComponent<CapsuleCollider>();
 	}
 	
 	// Update is called once per frame
@@ -55,8 +58,10 @@ public class RigidbodyController : MonoBehaviour {
                 anim.SetFloat("left", Random.Range(0.06f,1));
                 anim.SetBool("grounded", true);
                 anim.SetFloat("back", 0);
+                skate.transform.parent = transform;
+                skate.BounceSkate();
+                flyingPivot.localEulerAngles = Vector3.zero;
             }
-
             slideForce += slidePower * Time.deltaTime;
             slideForce /= 1 + slideDrag * Time.deltaTime;
             
@@ -84,6 +89,8 @@ public class RigidbodyController : MonoBehaviour {
                 movement = Vector3.zero;
                 anim.transform.localEulerAngles = Vector3.zero;
                 anim.SetBool("grounded", false);
+                
+                skate.SetSkateBelowFeet();
             }
 
             gravityForce -= gravityPower * Time.deltaTime;
@@ -113,10 +120,10 @@ public class RigidbodyController : MonoBehaviour {
         RaycastHit downHit;
         RaycastHit frontHit;
 
-        bool down = Physics.Raycast(transform.position, -transform.up, out downHit, 1.1f, slideMask);
+        bool down = Physics.Raycast(transform.position, -transform.up, out downHit, col.height/2 + 0.3f, slideMask);
         bool up = Physics.Raycast(transform.position + transform.forward * forwardRayDist, -transform.up, out frontHit, 2f, slideMask);
 
-        Debug.DrawRay(transform.position, -transform.up * 1.1f, Color.red);
+        Debug.DrawRay(transform.position, -transform.up * (col.height/2 + 0.3f), Color.red);
         Debug.DrawRay(transform.position + transform.forward * forwardRayDist, -transform.up * 2, Color.blue);
 
         if (down && up)
@@ -134,8 +141,4 @@ public class RigidbodyController : MonoBehaviour {
 
     }
 
-    public void RotatePlayer()
-    {
-
-    }
 }
