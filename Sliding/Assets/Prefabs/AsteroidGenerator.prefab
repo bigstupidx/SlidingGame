@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1299139739729216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.4, y: -3.3, z: 125.3}
+  m_LocalPosition: {x: -10, y: 10, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -52,16 +52,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   asteroids:
-  - {fileID: 1135915388689424, guid: 0232e6964540bf1449d6345f825057e1, type: 2}
-  - {fileID: 1754116157896648, guid: 0a3efe9d4e508804586f4f8c4bd6e368, type: 2}
-  - {fileID: 1297470973784726, guid: ebc1b2c7242baec41baee9d6eea28c28, type: 2}
-  - {fileID: 1231976404964042, guid: f62cab65f11ae2e49bb3ab7cce45905e, type: 2}
-  - {fileID: 1358045877943014, guid: c4801883344709f4ea6770b5bc0c2246, type: 2}
-  - {fileID: 1064519275760328, guid: 1790d88a604f1484392d9360babc88be, type: 2}
-  - {fileID: 1383139138047582, guid: 902c6a7f1b15f884f8d30a4acc1ecf30, type: 2}
-  - {fileID: 1065052122264344, guid: 518f60a4531d8884890b6c2d0a9d31bc, type: 2}
-  - {fileID: 1162002661157940, guid: 6c7532c962c58a344a499a13d1b40ea9, type: 2}
-  asteroidAmount: 10
-  maxDistance: 40
+  - {fileID: 1720447330034558, guid: 0232e6964540bf1449d6345f825057e1, type: 2}
+  - {fileID: 1958877562183614, guid: 0a3efe9d4e508804586f4f8c4bd6e368, type: 2}
+  - {fileID: 1792239117591272, guid: ebc1b2c7242baec41baee9d6eea28c28, type: 2}
+  - {fileID: 1128227505587484, guid: f62cab65f11ae2e49bb3ab7cce45905e, type: 2}
+  - {fileID: 1160691069357642, guid: c4801883344709f4ea6770b5bc0c2246, type: 2}
+  - {fileID: 1357115747340236, guid: 1790d88a604f1484392d9360babc88be, type: 2}
+  - {fileID: 1081107919100104, guid: 902c6a7f1b15f884f8d30a4acc1ecf30, type: 2}
+  - {fileID: 1320548457754118, guid: 641fa4245c4d06743bd14d0bb73f24dd, type: 2}
+  - {fileID: 1444336779872242, guid: 221213b90078c504d8eb82cfc89addb6, type: 2}
+  - {fileID: 1047393250347598, guid: 64101d872d6d90b45acc526850d83740, type: 2}
+  asteroidAmount: 30
+  spawnArea: {x: 20, y: 20, z: 80}
   minScale: 0.2
-  maxScale: 2
+  maxScale: 3

@@ -46,8 +46,9 @@ public class AsteroidGroupCreation : MonoBehaviour {
         
 	}
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawCube(transform.position, spawnArea);
+        Gizmos.color = new Color(0, 1, 0, .3f);
+        Gizmos.DrawCube(transform.position, spawnArea * 2);
     }
 }
