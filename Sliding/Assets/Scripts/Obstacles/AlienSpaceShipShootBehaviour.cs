@@ -21,8 +21,12 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
     public Transform[] explosions;
     public Vector3 finalExplosionScale = new Vector3(10, 10, 10);
     public Vector3 wormHoleMassiveScale = new Vector3(450, 450, 450);
+    public bool[] missileLandPositionStatic;
+    public ParticleSystem[] shootParticles;
 
     //Private
+    RigidbodyController player;
+    CameraShake cam;
     Transform missilesLandPositionsContainer;
     Vector3 shipInitialLocation;
     Vector3[] initialMissilesPositions = new Vector3[3];
@@ -32,17 +36,16 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
 
     private void Awake()
     {
+        cam = Camera.main.GetComponent<CameraShake>();
+        player = cam.GetComponent<ThirdPersonCamera>().target.GetComponent<RigidbodyController>();
+
         shipInitialLocation = spaceShip.localPosition;
         missilesLandPositionsContainer = missilesLandPositions[0].parent;
 
         for(int i = 0; i < initialMissilesPositions.Length; i++)
         {
             initialMissilesPositions[i] = missiles[i].localPosition;
-        }
-
-        Initialize();
-
-       
+        }     
     }
 
     public void Initialize()
@@ -88,12 +91,12 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
 
         while ((shipFinalPosition - spaceShip.localPosition).sqrMagnitude > 420)
         {
-            spaceShip.localPosition = Vector3.Lerp(spaceShip.localPosition, shipFinalPosition, Time.deltaTime);
+            spaceShip.localPosition = Vector3.Lerp(spaceShip.localPosition, shipFinalPosition, Time.deltaTime * 3);
             yield return null;
         }
 
         timer = 0;
-        timeToLerp = 0.5f;
+        timeToLerp = 0.2f;
 
         Quaternion finalRotation = Quaternion.Euler(shipCannons.rotation.eulerAngles + finalCannonRotation);
 
@@ -109,6 +112,13 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
         {
             missiles[i].parent = missilesLandPositionsContainer;
             newMissilesLocalPositions[i] = missiles[i].localPosition;
+
+            if (!missileLandPositionStatic[i])
+            {
+                Vector3 translation = Vector3.forward * player.rigidbody.velocity.magnitude * (2f + timeBetweenMissiles + missileTimeToLand);
+                translation += Vector3.forward * player.rigidbody.velocity.magnitude * (timeBetweenMissiles + missileTimeToLand) * i;
+                missilesLandPositions[i].localPosition += translation;
+            }
             yield return null;
         }
 
@@ -117,12 +127,14 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
             timer = 0;
             groundFeedbacks[i].SetActive(true);
             yield return new WaitForSeconds(timeBetweenMissiles);
+            shootParticles[i].Play();
             while (timer < missileTimeToLand)
             {
                 timer += Time.deltaTime;
                 missiles[i].localPosition = MathParabola.Parabola(newMissilesLocalPositions[i], missilesLandPositions[i].localPosition, missileHeight, timer / missileTimeToLand);
                 yield return null;
             }
+            cam.ShakeCamera(20, 0.5f);
             StartCoroutine(ScaleExplosion(i));
             groundFeedbacks[i].SetActive(false);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour {
 
     private void Awake()
     {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         Instance = this;
 
         ragdoll = player.GetComponentsInChildren<Rigidbody>();
@@ -56,5 +59,12 @@ public class GameManager : MonoBehaviour {
             r.velocity = playerRb.velocity;
         }
         playerRb.velocity = Vector3.zero;
+        StartCoroutine(ReloadSceneWithDelay(3));
+    }
+
+    IEnumerator ReloadSceneWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(0);
     }
 }
