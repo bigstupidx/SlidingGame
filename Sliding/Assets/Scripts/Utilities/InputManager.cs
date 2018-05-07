@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour {
         }
         else
         {
-            horizontalValue = Mathf.Lerp(horizontalValue, 0, Time.deltaTime * 3);
+            horizontalValue = Mathf.Lerp(horizontalValue, 0, Time.deltaTime * gravity);
             if(Mathf.Abs(horizontalValue) < dead)
             {
                 horizontalValue = 0;
