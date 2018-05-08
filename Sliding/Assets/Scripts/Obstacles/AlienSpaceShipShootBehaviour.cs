@@ -61,6 +61,8 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
             missiles[i].parent = spaceShip;
             missiles[i].localPosition = initialMissilesPositions[i];
             explosions[i].localScale = Vector3.zero;
+            if(!missileLandPositionStatic[i])
+                missilesLandPositions[i].localPosition = new Vector3(Random.Range(-8,8), missilesLandPositions[i].localPosition.y, 0);
         }
     }
 

@@ -63,13 +63,14 @@ public class RigidbodyController : MonoBehaviour {
                 skate.BounceSkate();
                 col.height = 2;
                 flyingPivot.localEulerAngles = Vector3.zero;
+                gravity = Vector3.zero;
             }
             slideForce += slidePower * Time.deltaTime;
             slideForce /= 1 + slideDrag * Time.deltaTime;
 
             slideDirection *= slideForce;
 
-            gravity = -transform.up;
+            //gravity = -transform.up;
 
             //Mouse/Touch input
             Vector3 rotation = Vector3.zero;
