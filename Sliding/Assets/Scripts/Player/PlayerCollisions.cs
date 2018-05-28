@@ -11,7 +11,7 @@ public class PlayerCollisions : MonoBehaviour {
         slideMask = GetComponent<RigidbodyController>().slideMask;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if(slideMask != (slideMask | (1 << collision.gameObject.layer)))
         {
@@ -22,6 +22,7 @@ public class PlayerCollisions : MonoBehaviour {
             foreach(ContactPoint c in collision.contacts)
             {
                 var relativePosition = transform.InverseTransformPoint(c.point);
+
 
                 if (relativePosition.y >= -0.5f)
                 {

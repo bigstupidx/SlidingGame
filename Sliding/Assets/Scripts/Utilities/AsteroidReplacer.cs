@@ -7,7 +7,6 @@ public class AsteroidReplacer : MonoBehaviour {
 
     public GameObject[] asteroids;
 
-    bool coroutineRunning = false;
 
     List<Transform> newAsteroids = new List<Transform>();
 
