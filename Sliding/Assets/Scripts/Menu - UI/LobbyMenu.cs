@@ -7,7 +7,7 @@ using System;
 public class LobbyMenu : MonoBehaviour {
 
     // Public 
-
+    public MenuSounds sounds;
     public GameObject playerSkinsContainer;
     public GameObject skateContainer;
     public GameObject activeSkillsContainer;
@@ -68,7 +68,7 @@ public class LobbyMenu : MonoBehaviour {
         for (int i = 0; i < skateModelsContainer.transform.childCount; i++)
             skate3DModels[i] = skateModelsContainer.transform.GetChild(i).gameObject;
 
-        minerals.text = "" + DataLoader.gameData.minerals;
+        minerals.text = "" + DataManager.gameData.minerals;
 
         InitializeItemStatus();
 
@@ -85,8 +85,9 @@ public class LobbyMenu : MonoBehaviour {
             selectedPlayerSkin.Selected = false;
             item.Selected = true;
             selectedPlayerSkin = item;
-            DataLoader.gameData.userPref.skin = System.Array.IndexOf(playerSkins, selectedPlayerSkin);
-            DataLoader.SaveData();
+            DataManager.gameData.userPref.skin = System.Array.IndexOf(playerSkins, selectedPlayerSkin);
+            DataManager.SaveData();
+            sounds.PlaySwitchingSound();
         }
         else
         {
@@ -108,8 +109,9 @@ public class LobbyMenu : MonoBehaviour {
             selectedSkate.Selected = false;
             item.Selected = true;
             selectedSkate = item;
-            DataLoader.gameData.userPref.skate = System.Array.IndexOf(skateSkins, selectedSkate);
-            DataLoader.SaveData();
+            DataManager.gameData.userPref.skate = System.Array.IndexOf(skateSkins, selectedSkate);
+            DataManager.SaveData();
+            sounds.PlaySwitchingSound();
         }
         else
         {
@@ -129,8 +131,9 @@ public class LobbyMenu : MonoBehaviour {
             selectedActive.Selected = false;
             item.Selected = true;
             selectedActive = item;
-            DataLoader.gameData.userPref.activeSkill = System.Array.IndexOf(activeSkills, selectedActive);
-            DataLoader.SaveData();
+            DataManager.gameData.userPref.activeSkill = System.Array.IndexOf(activeSkills, selectedActive);
+            DataManager.SaveData();
+            sounds.PlaySwitchingSound();
         }
         else
         {
@@ -146,8 +149,9 @@ public class LobbyMenu : MonoBehaviour {
             selectedPassive.Selected = false;
             item.Selected = true;
             selectedPassive = item;
-            DataLoader.gameData.userPref.passiveSkill = System.Array.IndexOf(passiveSkills, selectedPassive);
-            DataLoader.SaveData();
+            DataManager.gameData.userPref.passiveSkill = System.Array.IndexOf(passiveSkills, selectedPassive);
+            DataManager.SaveData();
+            sounds.PlaySwitchingSound();
         }
         else
         {
@@ -160,59 +164,59 @@ public class LobbyMenu : MonoBehaviour {
     {
         for (int i = 0; i < playerSkins.Length; i++)
         {
-            if (i > DataLoader.gameData.playerSkins.Count - 1)
+            if (i > DataManager.gameData.playerSkins.Count - 1)
             {
-                DataLoader.gameData.playerSkins.Add(playerSkins[i].Unlocked);
+                DataManager.gameData.playerSkins.Add(playerSkins[i].Unlocked);
             }
             else
             {
-                playerSkins[i].Unlocked = DataLoader.gameData.playerSkins[i];
+                playerSkins[i].Unlocked = DataManager.gameData.playerSkins[i];
             }
         }
 
         for (int i = 0; i < skateSkins.Length; i++)
         {
-            if (i > DataLoader.gameData.skateSkins.Count - 1)
+            if (i > DataManager.gameData.skateSkins.Count - 1)
             {
-                DataLoader.gameData.skateSkins.Add(skateSkins[i].Unlocked);
+                DataManager.gameData.skateSkins.Add(skateSkins[i].Unlocked);
             }
             else
             {
-                skateSkins[i].Unlocked = DataLoader.gameData.skateSkins[i];
+                skateSkins[i].Unlocked = DataManager.gameData.skateSkins[i];
             }
         }
 
         for (int i = 0; i < activeSkills.Length; i++)
         {
-            if (i > DataLoader.gameData.activeSkills.Count - 1)
+            if (i > DataManager.gameData.activeSkills.Count - 1)
             {
-                DataLoader.gameData.activeSkills.Add(activeSkills[i].Unlocked);
+                DataManager.gameData.activeSkills.Add(activeSkills[i].Unlocked);
             }
             else
             {
-                activeSkills[i].Unlocked = DataLoader.gameData.activeSkills[i];
+                activeSkills[i].Unlocked = DataManager.gameData.activeSkills[i];
             }
         }
 
         for (int i = 0; i < passiveSkills.Length; i++)
         {
-            if (i > DataLoader.gameData.passiveSkills.Count - 1)
+            if (i > DataManager.gameData.passiveSkills.Count - 1)
             {
-                DataLoader.gameData.passiveSkills.Add(passiveSkills[i].Unlocked);
+                DataManager.gameData.passiveSkills.Add(passiveSkills[i].Unlocked);
             }
             else
             {
-                passiveSkills[i].Unlocked = DataLoader.gameData.passiveSkills[i];
+                passiveSkills[i].Unlocked = DataManager.gameData.passiveSkills[i];
             }
         }
 
-        selectedPlayerSkin = playerSkins[DataLoader.gameData.userPref.skin];        
-        selectedSkate = skateSkins[DataLoader.gameData.userPref.skate];        
-        selectedActive = activeSkills[DataLoader.gameData.userPref.activeSkill];
-        selectedPassive = passiveSkills[DataLoader.gameData.userPref.passiveSkill];
+        selectedPlayerSkin = playerSkins[DataManager.gameData.userPref.skin];        
+        selectedSkate = skateSkins[DataManager.gameData.userPref.skate];        
+        selectedActive = activeSkills[DataManager.gameData.userPref.activeSkill];
+        selectedPassive = passiveSkills[DataManager.gameData.userPref.passiveSkill];
 
-        currentPlayer3DModel = player3DModels[DataLoader.gameData.userPref.skin];
-        currentSkate3DModel = skate3DModels[DataLoader.gameData.userPref.skate];
+        currentPlayer3DModel = player3DModels[DataManager.gameData.userPref.skin];
+        currentSkate3DModel = skate3DModels[DataManager.gameData.userPref.skate];
         currentPlayer3DModel.SetActive(true);
         currentSkate3DModel.SetActive(true);
 
@@ -221,12 +225,13 @@ public class LobbyMenu : MonoBehaviour {
         selectedActive.Selected = true;
         selectedPassive.Selected = true;
 
-        DataLoader.SaveData();
+        DataManager.SaveData();
     }
 	
     public void CloseBuySkillWindow()
     {
         buySkillWindow.SetActive(false);
+        sounds.PlayClickSound();
     }
 
     public void OpenBuySkillWindow(SkillInfo skill)
@@ -238,6 +243,8 @@ public class LobbyMenu : MonoBehaviour {
 
         skillBuyButton.SetActive(true);
         buySkillWindow.SetActive(true);
+
+        sounds.PlayPopUpSound();
     }
 
     public void OpenInfoPanel(SkillInfo skill)
@@ -249,6 +256,8 @@ public class LobbyMenu : MonoBehaviour {
 
         skillBuyButton.SetActive(false);
         buySkillWindow.SetActive(true);
+
+        sounds.PlayPopUpSound();
     }
 
     public void OpenBuySkinWindow()
@@ -265,7 +274,7 @@ public class LobbyMenu : MonoBehaviour {
 
     public void BuySkate()
     {
-        if(DataLoader.gameData.minerals >= skateToBuy.price)
+        if(DataManager.gameData.minerals >= skateToBuy.price)
         {
             selectedSkate.Selected = false;
             selectedSkate = skateToBuy;
@@ -273,18 +282,24 @@ public class LobbyMenu : MonoBehaviour {
             selectedSkate.Selected = true;
             skateLockBuyPanel.SetActive(false);
 
-            DataLoader.gameData.skateSkins[Array.IndexOf(skateSkins, selectedSkate)] = true;
-            DataLoader.gameData.userPref.skate = Array.IndexOf(skateSkins, selectedSkate);
-            DataLoader.gameData.minerals -= selectedSkate.price;
-            DataLoader.SaveData();
+            DataManager.gameData.skateSkins[Array.IndexOf(skateSkins, selectedSkate)] = true;
+            DataManager.gameData.userPref.skate = Array.IndexOf(skateSkins, selectedSkate);
+            DataManager.gameData.minerals -= selectedSkate.price;
+            DataManager.SaveData();
 
-            minerals.text = "" + DataLoader.gameData.minerals;
+            minerals.text = "" + DataManager.gameData.minerals;
+
+            sounds.PlayBoughtSound();
+        }
+        else
+        {
+            sounds.PlayErrorSound();
         }
     }
 
     public void BuySkin()
     {
-        if (DataLoader.gameData.minerals >= skinToBuy.price)
+        if (DataManager.gameData.minerals >= skinToBuy.price)
         {
             selectedPlayerSkin.Selected = false;
             selectedPlayerSkin = skinToBuy;
@@ -292,18 +307,25 @@ public class LobbyMenu : MonoBehaviour {
             selectedPlayerSkin.Selected = true;
             skinLockBuyPanel.SetActive(false);
 
-            DataLoader.gameData.playerSkins[Array.IndexOf(playerSkins, selectedPlayerSkin)] = true;
-            DataLoader.gameData.userPref.skin = Array.IndexOf(playerSkins, selectedPlayerSkin);
-            DataLoader.gameData.minerals -= skinToBuy.price;
-            DataLoader.SaveData();
+            DataManager.gameData.playerSkins[Array.IndexOf(playerSkins, selectedPlayerSkin)] = true;
+            DataManager.gameData.userPref.skin = Array.IndexOf(playerSkins, selectedPlayerSkin);
+            DataManager.gameData.minerals -= skinToBuy.price;
+            DataManager.SaveData();
 
-            minerals.text = "" + DataLoader.gameData.minerals;
+            minerals.text = "" + DataManager.gameData.minerals;
+
+            sounds.PlayBoughtSound();
         }
+        else
+        {
+            sounds.PlayErrorSound();
+        }
+
     }
 
     public void BuySkill()
     {
-        if (DataLoader.gameData.minerals >= skillToBuy.price)
+        if (DataManager.gameData.minerals >= skillToBuy.price)
         {
             if(Array.IndexOf(activeSkills, skillToBuy) > -1)
             {
@@ -313,12 +335,14 @@ public class LobbyMenu : MonoBehaviour {
                 selectedActive.Selected = true;
                 CloseBuySkillWindow();
 
-                DataLoader.gameData.activeSkills[Array.IndexOf(activeSkills, selectedActive)] = true;
-                DataLoader.gameData.userPref.activeSkill = Array.IndexOf(activeSkills, selectedActive);
-                DataLoader.gameData.minerals -= skillToBuy.price;
-                DataLoader.SaveData();
+                DataManager.gameData.activeSkills[Array.IndexOf(activeSkills, selectedActive)] = true;
+                DataManager.gameData.userPref.activeSkill = Array.IndexOf(activeSkills, selectedActive);
+                DataManager.gameData.minerals -= skillToBuy.price;
+                DataManager.SaveData();
 
-                minerals.text = "" + DataLoader.gameData.minerals;
+                minerals.text = "" + DataManager.gameData.minerals;
+
+                sounds.PlayBoughtSound();
             }
             else
             {
@@ -328,14 +352,20 @@ public class LobbyMenu : MonoBehaviour {
                 selectedPassive.Selected = true;
                 CloseBuySkillWindow();
 
-                DataLoader.gameData.passiveSkills[Array.IndexOf(passiveSkills, selectedPassive)] = true;
-                DataLoader.gameData.userPref.passiveSkill = Array.IndexOf(passiveSkills, selectedPassive);
-                DataLoader.gameData.minerals -= skillToBuy.price;
-                DataLoader.SaveData();
+                DataManager.gameData.passiveSkills[Array.IndexOf(passiveSkills, selectedPassive)] = true;
+                DataManager.gameData.userPref.passiveSkill = Array.IndexOf(passiveSkills, selectedPassive);
+                DataManager.gameData.minerals -= skillToBuy.price;
+                DataManager.SaveData();
 
-                minerals.text = "" + DataLoader.gameData.minerals;
+                minerals.text = "" + DataManager.gameData.minerals;
+
+                sounds.PlayBoughtSound();
             }
-            
+
+        }
+        else
+        {
+            sounds.PlayErrorSound();
         }
     }
 

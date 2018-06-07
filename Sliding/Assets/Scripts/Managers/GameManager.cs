@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour {
 
     //Public
     public static GameManager Instance;        
     public GameObject player;
-
     public bool isDead = false;
+
+    public GameObject DeathMenu;
+    public Text score;
+    public Text bestScore;
+    public Score scoreManager;
 
     //Private
     Rigidbody[] ragdoll;
@@ -59,12 +65,21 @@ public class GameManager : MonoBehaviour {
             r.velocity = playerRb.velocity;
         }
         playerRb.velocity = Vector3.zero;
-        StartCoroutine(ReloadSceneWithDelay(3));
+        StartCoroutine(OpenDeathMenuWithDelay(3));
+
+        if (scoreManager.score > DataManager.gameData.highScore)
+        {
+            DataManager.gameData.highScore = (int)scoreManager.score;
+            DataManager.SaveData();
+        }
     }
 
-    IEnumerator ReloadSceneWithDelay(float delay)
+    IEnumerator OpenDeathMenuWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(1);
+
+        score.text = String.Format("{0:0,0}", scoreManager.score);
+        bestScore.text = String.Format("{0:0,0}", DataManager.gameData.highScore);
+        DeathMenu.SetActive(true);
     }
 }

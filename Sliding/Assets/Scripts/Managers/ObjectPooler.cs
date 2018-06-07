@@ -27,7 +27,7 @@ public class ObjectPooler : MonoBehaviour {
 
     public Module GetObject(int level)
     {
-        chosenModules = platforms.Where(x => x.level == level).ToArray();
+        chosenModules = platforms.Where(x => x.level <= level).ToArray();
         Module selectedModule = chosenModules[Random.Range(0, chosenModules.Length)];
         platforms.Remove(selectedModule);
         selectedModule.gameObject.SetActive(true);

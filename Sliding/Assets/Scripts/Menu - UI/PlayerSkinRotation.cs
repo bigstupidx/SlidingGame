@@ -19,14 +19,4 @@ public class PlayerSkinRotation : MonoBehaviour, IPointerDownHandler, IDragHandl
     {
         
     }
-
-    private void OnMouseDown()
-    {
-        Debug.Log("Hi");
-    }
-
-    private void OnMouseEnter()
-    {
-        Debug.Log("DIO MERDA");
-    }
 }

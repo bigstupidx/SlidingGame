@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Score : MonoBehaviour {
 
     public GameObject stepsPanel;
     public Text scoreText;
     public Text multiplierText;
+    public Text mineralText;
     public Rigidbody player;
     public float multiplier = 1;
 
@@ -15,11 +17,10 @@ public class Score : MonoBehaviour {
 
     GameObject[] stepIcons = new GameObject[3];
     Vector3 localVelocity;
-    float score = 0;
+    [HideInInspector]
+    public float score = 0;
     int steps = 0;
-
-
-
+    Transform playerTransform;
 
     public int Steps
     {
@@ -55,19 +56,22 @@ public class Score : MonoBehaviour {
     void Awake () {
         for(int i = 0; i < stepIcons.Length; i++)
             stepIcons[i] = stepsPanel.transform.GetChild(i).gameObject;
- 
+
+        mineralText.text = "" + DataManager.gameData.minerals;
+
+        playerTransform = player.transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.I))
-            Steps += 1;
-        
-        localVelocity = player.transform.TransformDirection(player.velocity);
+
+        localVelocity = playerTransform.TransformDirection(player.velocity);
         localVelocity.y = 0;
 
-        score += (int)(localVelocity.magnitude * Time.deltaTime * 100 * multiplier);
+        score += (localVelocity.magnitude * Time.deltaTime * 100 * multiplier);
 
-        scoreText.text = "" + score;
-	}
+
+
+        scoreText.text = String.Format("{0:0,0}", score);
+    }
 }

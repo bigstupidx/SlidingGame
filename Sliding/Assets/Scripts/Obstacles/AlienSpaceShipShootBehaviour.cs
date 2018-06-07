@@ -23,6 +23,8 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
     public Vector3 wormHoleMassiveScale = new Vector3(450, 450, 450);
     public bool[] missileLandPositionStatic;
     public ParticleSystem[] shootParticles;
+    public AudioSource source;
+    public AudioClip[] clips;
 
     //Private
     RigidbodyController player;
@@ -80,7 +82,8 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
         float timer = 0;
         float timeToLerp = 1;
 
-        while(timer < timeToLerp)
+        source.PlayOneShot(clips[3]);
+        while (timer < timeToLerp)
         {
             timer += Time.deltaTime;
             wormHole.localScale = Vector3.Lerp(Vector3.zero, finalWormHoleScale, timer / timeToLerp);
@@ -90,6 +93,8 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
         halo.SetActive(true);
 
         Vector3 shipFinalPosition = shipInitialLocation + Vector3.right * 150;
+
+        source.PlayOneShot(clips[0]);
 
         while ((shipFinalPosition - spaceShip.localPosition).sqrMagnitude > 420)
         {
@@ -130,6 +135,8 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
             groundFeedbacks[i].SetActive(true);
             yield return new WaitForSeconds(timeBetweenMissiles);
             shootParticles[i].Play();
+            source.PlayOneShot(clips[1]);
+            StartCoroutine(PlaySoundWithDelay(.3f));
             while (timer < missileTimeToLand)
             {
                 timer += Time.deltaTime;
@@ -144,7 +151,7 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
         timer = 0;
         timeToLerp = 2f;
 
-        while((wormHoleMassiveScale - wormHole.localScale).sqrMagnitude > 20)
+        while ((wormHoleMassiveScale - wormHole.localScale).sqrMagnitude > 20)
         {
             timer += Time.deltaTime;
             wormHole.localScale = Vector3.Lerp(wormHole.localScale, wormHoleMassiveScale, timer / timeToLerp);
@@ -154,6 +161,7 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
         halo.SetActive(false);
 
         timer = 0;
+        source.PlayOneShot(clips[3]);
 
         while (wormHole.localScale.sqrMagnitude > 0)
         {
@@ -191,5 +199,11 @@ public class AlienSpaceShipShootBehaviour : MonoBehaviour, IInitializable {
             explosions[i].localScale = startingScale + new Vector3(Mathf.Sin(timer * speed), Mathf.Sin(timer * speed), Mathf.Sin(timer * speed)) * radius;
             yield return null;
         }
+    }
+
+    IEnumerator PlaySoundWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        source.PlayOneShot(clips[2]);
     }
 }

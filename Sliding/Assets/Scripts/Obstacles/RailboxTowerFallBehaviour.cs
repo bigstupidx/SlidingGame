@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
 
+    public AudioSource source;
     public ParticleSystem sparkles;
     public Rigidbody tower;
     public float fallForce = 5;
@@ -13,11 +14,13 @@ public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
     public bool relativeDirection = true;
     bool trigger = false;
     Vector3 towerPosition;
+    CameraShake cam;
 
     void Awake()
     {
         towerPosition = tower.transform.localPosition;
         sparkles.Stop();
+        cam = Camera.main.GetComponent<CameraShake>();
     }
 
     public void Initialize()
@@ -34,6 +37,7 @@ public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
         {
             StartCoroutine(TowerFall());
             trigger = true;
+            cam.ShakeCamera(20, 0.5f);
         }
     }
 
@@ -45,6 +49,7 @@ public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
         Vector3 actualTorque = relativeDirection ? tower.transform.TransformDirection(torqueDirection) * torqueForce * tower.mass : torqueDirection * torqueForce * tower.mass;
         tower.AddForce(actualForce);
         tower.AddTorque(actualTorque);
+        source.Play();
 
         float timer = 0;
         float timeToApplyGravity = 10;

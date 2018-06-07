@@ -4,12 +4,30 @@ using UnityEngine;
 
 public class MultiplierTrigger : MonoBehaviour, IInitializable {
 
-    public Score score;
+    
     public GameObject items;
-
+    public ParticleSystem particles;
     public int value = 1;
+    public float pickDistance = 3;
 
+    Transform player;
+    Score score;
     bool trigger = false;
+
+    PlayerSounds playerSounds;
+
+    public void Awake()
+    {
+        score = GameObject.FindObjectOfType<Score>();
+        player = Camera.main.GetComponent<ThirdPersonCamera>().target;
+
+        if(DataManager.gameData.userPref.passiveSkill == 1)
+        {
+            pickDistance = 8;
+        }
+
+        playerSounds = player.GetComponent<PlayerSounds>();
+    }
 
     public void Initialize()
     {
@@ -17,15 +35,33 @@ public class MultiplierTrigger : MonoBehaviour, IInitializable {
         items.SetActive(true);
     }
 
-    private void OnTriggerEnter(Collider other)
+    void Update()
     {
-        if(!trigger && other.tag == "Player")
+        if (!trigger && Vector3.Distance(player.position, transform.position) < pickDistance)
         {
             trigger = true;
-            score.Steps += value;
-            items.SetActive(false);
+            StartCoroutine(PositionLerp());
         }
     }
 
+    IEnumerator PositionLerp()
+    {
+        Vector3 startingPos = transform.position;
+
+        float time = 0.2f;
+        float timer = 0;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+            transform.position = Vector3.Lerp(startingPos, player.position, timer / time);
+            yield return null;
+        }
+
+        items.SetActive(false);
+        score.Steps += value;
+        particles.Play();
+        playerSounds.PlayPickUpSound();
+    }
 
 }

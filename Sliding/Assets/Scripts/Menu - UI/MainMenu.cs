@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
+    public MenuSounds sounds;
     public GameObject Main;
     public GameObject Lobby;
     public GameObject Options;
@@ -18,7 +19,7 @@ public class MainMenu : MonoBehaviour {
     public Transform lobbyButtons;
     public Transform lobbyPanel;
 
-    bool canInteract = true;
+    bool canInteract = false;
 
     Vector3[] initialMainPositions = new Vector3[3];
     Vector3[] finalMainPositions = new Vector3[3];
@@ -44,7 +45,7 @@ public class MainMenu : MonoBehaviour {
         for (int i = 0; i < 3; i++)
         {
             initialMainPositions[i] = Main.transform.GetChild(i).position;
-            finalMainPositions[i] = initialMainPositions[i] - new Vector3(400, 0, 0);
+            finalMainPositions[i] = initialMainPositions[i] - new Vector3(600, 0, 0);
 
             Main.transform.GetChild(i).position = finalMainPositions[i];
         }
@@ -54,7 +55,7 @@ public class MainMenu : MonoBehaviour {
         astronaut.position = finalAstronautPosition;
 
         initialTitlePosition = title.position;
-        finalTitlePosition = title.position + new Vector3(0, 3, 0);
+        finalTitlePosition = title.position + new Vector3(0, 5, 0);
         title.position = finalTitlePosition;
 
         initialOptionsBackPosition = optionsBack.position;
@@ -90,13 +91,16 @@ public class MainMenu : MonoBehaviour {
                 yield return null;
             }
             timer = 0;
+            sounds.PlayWhoopSound();
         }
 
-        while(timer < 1.8f)
+        canInteract = true;
+
+        while (timer < 1f)
         {
             timer += Time.deltaTime;
-            astronaut.position = Vector3.Lerp(astronaut.position, initialAstronautPosition, Time.deltaTime * 3);
-            title.position = Vector3.Lerp(title.position, initialTitlePosition, Time.deltaTime * 3);
+            astronaut.position = Vector3.Lerp(astronaut.position, initialAstronautPosition, Time.deltaTime * 5.5f);
+            title.position = Vector3.Lerp(title.position, initialTitlePosition, Time.deltaTime * 5.5f);
             yield return null;
         }
 
@@ -108,6 +112,7 @@ public class MainMenu : MonoBehaviour {
         {
             StartCoroutine(GoToLobbyCoroutine());
             canInteract = false;
+            sounds.PlayClickSound();
         }        
     }
 
@@ -117,6 +122,7 @@ public class MainMenu : MonoBehaviour {
         {
             StartCoroutine(GoToMenuCoroutine());
             canInteract = false;
+            sounds.PlayClickSound();
         }
     }
 
@@ -126,6 +132,7 @@ public class MainMenu : MonoBehaviour {
         {
             StartCoroutine(GoToOptionsCoroutine());
             canInteract = false;
+            sounds.PlayClickSound();
         }
     }
 
@@ -133,6 +140,7 @@ public class MainMenu : MonoBehaviour {
     {
         if(canInteract)
         {
+            sounds.PlayClickSound();
             SceneManager.LoadScene(level);
         }
     }
@@ -152,6 +160,7 @@ public class MainMenu : MonoBehaviour {
                 title.position = Vector3.Lerp(title.position, finalTitlePosition, Time.deltaTime * 3);
                 yield return null;
             }
+
             timer = 0;
         }       
 
@@ -191,6 +200,7 @@ public class MainMenu : MonoBehaviour {
         Main.SetActive(true);
 
         timer = 0;
+        time = 0.15f;
 
         for (int i = 0; i < 3; i++)
         {
@@ -202,6 +212,8 @@ public class MainMenu : MonoBehaviour {
                 title.position = Vector3.Lerp(title.position, initialTitlePosition, Time.deltaTime * 8);
                 yield return null;
             }
+            sounds.PlayWhoopSound();
+
             timer = 0;
         }
 

@@ -8,6 +8,7 @@ public class RigidbodyController : MonoBehaviour {
     public SkatePosition skate;
     public LayerMask slideMask;
     public Transform flyingPivot;
+    public Transform activeSkillContainer;
     public float moveSpeed = 5;
     public float airSpeed = 15;
     public float jumpForce = 10;
@@ -16,20 +17,28 @@ public class RigidbodyController : MonoBehaviour {
     public float gravityPower = 9;
     public float airDrag = 0.2f;
     public float forwardRayDist = 1;
+    public float timeBeforeDying = 5;
+    [HideInInspector]
+    public ActiveBase active;
 
     //Private
     [HideInInspector]
     public new Rigidbody rigidbody;
-    Animator anim;
+    [HideInInspector]
+    public Animator anim;
     CapsuleCollider col;
-    
-    Vector3 gravity;
+
+    PlayerSounds playerSounds;
+
+    [HideInInspector]
+    public Vector3 gravity;
     Vector3 slideDirection;
     Vector3 airDirection;
     Vector3 hitNormal;
     Vector3 externalForce;
 
-    float gravityForce;
+    [HideInInspector]
+    public float gravityForce;
     float slideForce;
     float airForce;
 
@@ -37,11 +46,14 @@ public class RigidbodyController : MonoBehaviour {
     bool lastFrameGrounded;
     bool lastFrameFlying;
 
+    float deathTimer = 0;
+
     // Use this for initialization
     void Awake () {
         rigidbody = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         col = GetComponent<CapsuleCollider>();
+        playerSounds = GetComponent<PlayerSounds>();
 	}
 	
 	// Update is called once per frame
@@ -64,6 +76,7 @@ public class RigidbodyController : MonoBehaviour {
                 col.height = 2;
                 flyingPivot.localEulerAngles = Vector3.zero;
                 gravity = Vector3.zero;
+                playerSounds.PlayLandingSound();
             }
             slideForce += slidePower * Time.deltaTime;
             slideForce /= 1 + slideDrag * Time.deltaTime;
@@ -85,16 +98,24 @@ public class RigidbodyController : MonoBehaviour {
 
             if (InputManager.GetJumpInput())
             {
-                anim.SetTrigger("jump");
-                anim.SetFloat("back", Random.value);
+                anim.SetFloat("back", Random.Range(0.06f, 1));
+
+                if (anim.GetFloat("back") > 0.5)
+                    playerSounds.PlayBackFlipSound();
+                else playerSounds.PlayFlipSound();
+
                 gravityForce = jumpForce;
                 gravity = transform.up * gravityForce;
             }
 
             if (Input.GetButtonDown("Jump"))
             {
-                anim.SetTrigger("jump");
                 anim.SetFloat("back", Random.value);
+
+                if (anim.GetFloat("back") > 0.5)
+                    playerSounds.PlayBackFlipSound();
+                else playerSounds.PlayFlipSound();
+
                 gravityForce = jumpForce;
                 gravity = transform.up * gravityForce;
             }
@@ -110,6 +131,7 @@ public class RigidbodyController : MonoBehaviour {
                 anim.SetBool("grounded", false);
                 col.height = 0.5f;
                 skate.SetSkateBelowFeet();
+                deathTimer = 0;
             }
 
             gravityForce -= gravityPower * Time.deltaTime;
@@ -125,12 +147,26 @@ public class RigidbodyController : MonoBehaviour {
             transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * airSpeed, 0), Space.Self);
             //flyingPivot.localEulerAngles = new Vector3(flyingPivot.localEulerAngles.x, flyingPivot.localEulerAngles.y, -Input.GetAxis("Horizontal") * 20);
 
+            if (InputManager.GetJumpInput() && !active.used)
+            {
+                active.Use();
+            }
+
+            if (Input.GetButtonDown("Jump") && !active.used)
+            {
+                active.Use();
+            }
             gravity = transform.up * gravityForce;
             gravityForce /= 1 + airDrag * Time.deltaTime;
             airForce /= 1 + airDrag * Time.deltaTime;
 
+            if(!Physics.Raycast(transform.position, -transform.up))
+                deathTimer += Time.deltaTime;
 
-            Debug.DrawRay(transform.position, airDirection * 10, Color.cyan);
+            if(deathTimer > timeBeforeDying)
+            {
+                GameManager.Instance.isDead = true;
+            }
         }
 
         rigidbody.velocity = slideDirection + airDirection + gravity + externalForce;
@@ -172,6 +208,11 @@ public class RigidbodyController : MonoBehaviour {
             hitNormal = downHit.normal;
             transform.rotation = Quaternion.LookRotation(slideDirection, hitNormal);
             Debug.DrawRay(downHit.point, slideDirection * 5, Color.green);
+
+            if (lastFrameFlying)
+            {
+                transform.position += transform.up * (1.29f - downHit.distance);
+            }
         }
         else
         {
