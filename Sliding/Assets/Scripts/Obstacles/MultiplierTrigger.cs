@@ -26,6 +26,11 @@ public class MultiplierTrigger : MonoBehaviour, IInitializable {
             pickDistance = 8;
         }
 
+        if (DataManager.gameData.userPref.passiveSkill == 0)
+        {
+            value += 1;
+        }
+
         playerSounds = player.GetComponent<PlayerSounds>();
     }
 

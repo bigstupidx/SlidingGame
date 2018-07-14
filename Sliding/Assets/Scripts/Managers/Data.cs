@@ -26,10 +26,11 @@ public class Data {
 
 [Serializable]
 public class Options {
-    [Range(0, 100)]
-    public float musicVolume = 50;
-    [Range(0, 100)]
-    public float soundVolume = 50;
+    public float musicVolume = -10;
+    public float soundVolume = -10;
+
+    public bool playTutorial = true;
+    public bool menuAnimations = true;
 }
 
 [Serializable]

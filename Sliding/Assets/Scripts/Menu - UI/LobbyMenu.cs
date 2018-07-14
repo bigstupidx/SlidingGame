@@ -30,6 +30,8 @@ public class LobbyMenu : MonoBehaviour {
     public Text skatePrice;
 
     public GameObject skillBuyButton;
+    public MainMenu main;
+
     // Private
 
     LobbyItem[] playerSkins;
@@ -52,6 +54,8 @@ public class LobbyMenu : MonoBehaviour {
     LobbyItem skinToBuy;
     LobbyItem skillToBuy;
 
+    [HideInInspector]
+    public bool canInteract = true;
 
 	// Use this for initialization
 	void Awake () {
@@ -68,16 +72,21 @@ public class LobbyMenu : MonoBehaviour {
         for (int i = 0; i < skateModelsContainer.transform.childCount; i++)
             skate3DModels[i] = skateModelsContainer.transform.GetChild(i).gameObject;
 
-        minerals.text = "" + DataManager.gameData.minerals;
 
         InitializeItemStatus();
 
-        
+    }
 
+    private void Update()
+    {
+        minerals.text = "" + DataManager.gameData.minerals;
     }
 
     public void SelectPlayerSkin(LobbyItem item)
     {
+        if (!canInteract)
+            return;
+
         if (item.Unlocked)
         {
             skinLockBuyPanel.SetActive(false);
@@ -102,6 +111,9 @@ public class LobbyMenu : MonoBehaviour {
 
     public void SelectSkateSkin(LobbyItem item)
     {
+        if (!canInteract)
+            return;
+
         if (item.Unlocked)
         {
             skateLockBuyPanel.SetActive(false);
@@ -126,6 +138,9 @@ public class LobbyMenu : MonoBehaviour {
 
     public void SelectActiveSkill(LobbyItem item)
     {
+        if (!canInteract)
+            return;
+
         if (item.Unlocked)
         {
             selectedActive.Selected = false;
@@ -144,6 +159,9 @@ public class LobbyMenu : MonoBehaviour {
 
     public void SelectPassiveSkill(LobbyItem item)
     {
+        if (!canInteract)
+            return;
+
         if (item.Unlocked)
         {
             selectedPassive.Selected = false;
@@ -232,6 +250,7 @@ public class LobbyMenu : MonoBehaviour {
     {
         buySkillWindow.SetActive(false);
         sounds.PlayClickSound();
+        canInteract = true;
     }
 
     public void OpenBuySkillWindow(SkillInfo skill)
@@ -245,6 +264,8 @@ public class LobbyMenu : MonoBehaviour {
         buySkillWindow.SetActive(true);
 
         sounds.PlayPopUpSound();
+
+        canInteract = false;
     }
 
     public void OpenInfoPanel(SkillInfo skill)
@@ -258,6 +279,7 @@ public class LobbyMenu : MonoBehaviour {
         buySkillWindow.SetActive(true);
 
         sounds.PlayPopUpSound();
+        canInteract = false;
     }
 
     public void OpenBuySkinWindow()
@@ -274,7 +296,10 @@ public class LobbyMenu : MonoBehaviour {
 
     public void BuySkate()
     {
-        if(DataManager.gameData.minerals >= skateToBuy.price)
+        if (!canInteract)
+            return;
+
+        if (DataManager.gameData.minerals >= skateToBuy.price)
         {
             selectedSkate.Selected = false;
             selectedSkate = skateToBuy;
@@ -293,12 +318,16 @@ public class LobbyMenu : MonoBehaviour {
         }
         else
         {
+            main.OpenWatchAVideoPanel();
             sounds.PlayErrorSound();
         }
     }
 
     public void BuySkin()
     {
+        if (!canInteract)
+            return;
+
         if (DataManager.gameData.minerals >= skinToBuy.price)
         {
             selectedPlayerSkin.Selected = false;
@@ -318,6 +347,7 @@ public class LobbyMenu : MonoBehaviour {
         }
         else
         {
+            main.OpenWatchAVideoPanel();
             sounds.PlayErrorSound();
         }
 
@@ -365,6 +395,8 @@ public class LobbyMenu : MonoBehaviour {
         }
         else
         {
+            main.OpenWatchAVideoPanel();
+            CloseBuySkillWindow();
             sounds.PlayErrorSound();
         }
     }

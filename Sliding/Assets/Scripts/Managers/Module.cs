@@ -14,6 +14,7 @@ public class Module : MonoBehaviour {
     private void Awake()
     {
         initializableItems = GetComponentsInChildren<IInitializable>();
+        this.gameObject.SetActive(false);
     }
 
     public Transform GetExit()

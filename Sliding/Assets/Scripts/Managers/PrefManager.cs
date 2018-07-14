@@ -5,6 +5,7 @@ using UnityEngine;
 public class PrefManager : MonoBehaviour {
 
     public RigidbodyController player;
+    public SkatePosition skate;
     public Transform activeSkillsContainer;
     public Transform passiveSkillsContainer;
     public Transform playerSkinsContainer;
@@ -25,18 +26,24 @@ public class PrefManager : MonoBehaviour {
                 passiveSkillsContainer.GetChild(i).gameObject.SetActive(false);
         }
 
-        /*
+        
         for (int i = 0; i < playerSkinsContainer.childCount; i++)
         {
             if (i != DataManager.gameData.userPref.skin)
                 playerSkinsContainer.GetChild(i).gameObject.SetActive(false);
+            else
+            {
+                PlayerSkinReferences p = playerSkinsContainer.GetChild(i).GetComponent<PlayerSkinReferences>();
+                player.anim = p.animator;
+                skate.feetPivot = p.feetPivot;
+            }
 
         }
-
+        
         for (int i = 0; i < skateSkinsContainer.childCount; i++)
         {
             if (i != DataManager.gameData.userPref.skate)
                 skateSkinsContainer.GetChild(i).gameObject.SetActive(false);
-        }*/
+        }
     }
 }

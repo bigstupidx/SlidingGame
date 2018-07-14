@@ -14,6 +14,8 @@ public class ThirdPersonCamera : MonoBehaviour {
     public bool lookAt;
     //Private
 
+
+    Vector3 previousUp;
 	// Use this for initialization
 	void Start () {
 	}
@@ -29,10 +31,11 @@ public class ThirdPersonCamera : MonoBehaviour {
             Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position, target.up);
             Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, targetRotation, smoothing);
             transform.rotation = smoothedRotation;
+            previousUp = transform.up;
         }
         else
         {
-            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position, previousUp);
             Quaternion smoothedRotation = Quaternion.Lerp(transform.rotation, targetRotation, smoothing);
             transform.rotation = smoothedRotation;
         }

@@ -16,6 +16,12 @@ public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
     Vector3 towerPosition;
     CameraShake cam;
 
+    Vector3 actualForce;
+    Vector3 actualTorque;
+
+    float timer = 0;
+    float timeToApplyGravity = 10;
+
     void Awake()
     {
         towerPosition = tower.transform.localPosition;
@@ -37,28 +43,30 @@ public class RailboxTowerFallBehaviour : MonoBehaviour, IInitializable {
         {
             StartCoroutine(TowerFall());
             trigger = true;
-            cam.ShakeCamera(20, 0.5f);
+            //cam.ShakeCamera(20, 0.5f);
+            //sparkles.Play();
         }
     }
 
     IEnumerator TowerFall()
     {
-        sparkles.Play();
         tower.isKinematic = false;
-        Vector3 actualForce = relativeDirection ? tower.transform.TransformDirection(fallDirection) * fallForce * tower.mass : fallDirection * fallForce * tower.mass;
-        Vector3 actualTorque = relativeDirection ? tower.transform.TransformDirection(torqueDirection) * torqueForce * tower.mass : torqueDirection * torqueForce * tower.mass;
+        yield return null;
+        actualForce = relativeDirection ? tower.transform.TransformDirection(fallDirection) * fallForce * tower.mass : fallDirection * fallForce * tower.mass;
+        //actualTorque = relativeDirection ? tower.transform.TransformDirection(torqueDirection) * torqueForce * tower.mass : torqueDirection * torqueForce * tower.mass;
         tower.AddForce(actualForce);
-        tower.AddTorque(actualTorque);
-        source.Play();
+        //tower.AddTorque(actualTorque);
+        //source.Play();
 
-        float timer = 0;
-        float timeToApplyGravity = 10;
+        //timer = 0;
 
-        while(timer < timeToApplyGravity)
-        {
-            timer += Time.deltaTime;
-            tower.AddForce(-transform.up * 9.8f * tower.mass);
-            yield return null;
-        }
+        yield return null;
+
+        //while (timer < timeToApplyGravity)
+        //{
+        //    timer += Time.deltaTime;
+        //    tower.AddForce(-transform.up * 9.8f * tower.mass);
+        //    yield return null;
+        //}
     }
 }

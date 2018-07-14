@@ -29,7 +29,11 @@ public class MineralTrigger : MonoBehaviour, IInitializable {
         if (parent.level == 3)
             chance = 0.08f;
 
-        if (DataManager.gameData.userPref.passiveSkill == 1)
+        if(DataManager.gameData.userPref.passiveSkill == 2)
+        {
+            chance *= 2;
+        }
+        else if (DataManager.gameData.userPref.passiveSkill == 1)
         {
             pickDistance = 8;
         }

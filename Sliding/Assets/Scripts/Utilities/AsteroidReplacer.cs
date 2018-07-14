@@ -15,6 +15,11 @@ public class AsteroidReplacer : MonoBehaviour {
         Replacee();
     }
 
+    private void Start()
+    {
+        Replacee();
+    }
+
     void Replacee()
     {
         for (int i = 0; i < transform.childCount; i++)
@@ -39,7 +44,28 @@ public class AsteroidReplacer : MonoBehaviour {
             }
         }
 
+        Debug.Log("instantiated amount: " + newAsteroids.Count);
+
         foreach(Transform t in newAsteroids)
+        {
+            t.parent = null;
+        }
+
+        Debug.Log("deleting: " + transform.childCount + " children");
+
+        var children = new List<GameObject>();
+
+        foreach (Transform child in transform)
+        {
+            children.Add(child.gameObject);
+        }
+
+        foreach(GameObject g in children)
+        {
+            DestroyImmediate(g);
+        }
+
+        foreach (Transform t in newAsteroids)
         {
             t.parent = this.transform;
         }

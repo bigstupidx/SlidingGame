@@ -70,8 +70,6 @@ public class Score : MonoBehaviour {
 
         score += (localVelocity.magnitude * Time.deltaTime * 100 * multiplier);
 
-
-
         scoreText.text = String.Format("{0:0,0}", score);
     }
 }

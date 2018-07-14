@@ -22,10 +22,15 @@ public class ActiveCooldownIcon : MonoBehaviour {
 
         active = activeSkillsContainer.GetChild(DataManager.gameData.userPref.activeSkill).GetComponent<ActiveBase>();
         cooldown = SkillInformations.activeAbilitiesCooldowns[DataManager.gameData.userPref.activeSkill];
+        if(DataManager.gameData.userPref.passiveSkill == 3)
+        {
+            cooldown *= .6f;
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
         if (active.used)
         {
             cooldownTimer += Time.deltaTime;

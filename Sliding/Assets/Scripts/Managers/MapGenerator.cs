@@ -8,6 +8,7 @@ public class MapGenerator : MonoBehaviour {
 
     //Public
     public Module startingModule;
+    public Module tutorialModule;
     public List<Module> platforms;
     public Transform player;
     public ObjectPooler pooler;
@@ -26,10 +27,15 @@ public class MapGenerator : MonoBehaviour {
     int currentLevel = 1;
     public int moduleCounter = 0;
 
+    bool firstModule = true;
 
     // Use this for initialization
     void Awake () {
-        currentModule = Instantiate(startingModule, Vector3.zero, Quaternion.identity);
+        if(DataManager.gameData.options.playTutorial)
+            currentModule = Instantiate(tutorialModule, Vector3.zero, Quaternion.identity);
+        else currentModule = Instantiate(startingModule, Vector3.zero, Quaternion.identity);
+
+        currentModule.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -45,7 +51,12 @@ public class MapGenerator : MonoBehaviour {
 
             if(queuedModules.Count > 3)
             {
-                pooler.AddObject(queuedModules.Dequeue());
+                if (firstModule)
+                {
+                    queuedModules.Dequeue().gameObject.SetActive(false);
+                    firstModule = false;
+                }
+                else pooler.AddObject(queuedModules.Dequeue());
             }
 
             moduleCounter++;
@@ -57,10 +68,9 @@ public class MapGenerator : MonoBehaviour {
             {
                 currentLevel = 2;
             }
-
         }
 
-        text.text = "" + currentLevel;
+        text.text = "lvl " + currentLevel + " md " + moduleCounter;
     }
 
 }

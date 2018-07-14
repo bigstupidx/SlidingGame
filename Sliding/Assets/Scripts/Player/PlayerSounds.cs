@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerSounds : MonoBehaviour {
 
     public AudioSource source;
+    public AudioSource skateSource;
 
     public AudioClip flip;
     public AudioClip backFlip;
@@ -12,6 +13,7 @@ public class PlayerSounds : MonoBehaviour {
     public AudioClip mineralPickup;
     public AudioClip[] boneCrack;
     public AudioClip[] landing;
+    public AudioClip dash;
 	
 	public void PlayFlipSound()
     {
@@ -41,5 +43,20 @@ public class PlayerSounds : MonoBehaviour {
     public void PlayMineralPickup()
     {
         source.PlayOneShot(mineralPickup);
+    }
+
+    public void ChangeSkatePitchGround()
+    {
+        skateSource.pitch = 1.5f;
+    }
+
+    public void ChangeSkatePitchAir()
+    {
+        skateSource.pitch = 1;
+    }
+
+    public void PlayDashSound()
+    {
+        source.PlayOneShot(dash);
     }
 }

@@ -16,17 +16,17 @@ public class InputManager : MonoBehaviour {
         {
             if (t.position.x > (Screen.width / 3) * 2)
             {
-                horizontalValue += Time.deltaTime * sensivity;
+                horizontalValue += Time.unscaledDeltaTime * sensivity;
             }
             else if (t.position.x < (Screen.width / 3))
             {
-                horizontalValue -= Time.deltaTime * sensivity;
+                horizontalValue -= Time.unscaledDeltaTime * sensivity;
             }
         }
 
         if(Input.touchCount == 0)
         {
-            horizontalValue = Mathf.Lerp(horizontalValue, 0, Time.deltaTime * gravity);
+            horizontalValue = Mathf.Lerp(horizontalValue, 0, Time.unscaledDeltaTime * gravity);
             if (Mathf.Abs(horizontalValue) < dead)
             {
                 horizontalValue = 0;
@@ -35,6 +35,11 @@ public class InputManager : MonoBehaviour {
 
         horizontalValue = Mathf.Clamp(horizontalValue, -1, 1);
 
+    }
+
+    public static void ResetInputAxis()
+    {
+        horizontalValue = 0;
     }
 
     public static float GetHorizontalInput()

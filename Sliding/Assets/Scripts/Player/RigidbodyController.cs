@@ -17,7 +17,12 @@ public class RigidbodyController : MonoBehaviour {
     public float gravityPower = 9;
     public float airDrag = 0.2f;
     public float forwardRayDist = 1;
-    public float timeBeforeDying = 5;
+    public float timeBeforeDying = 6;
+    public bool canJump = true;
+    public bool canUseSkill = true;
+    public bool gravityEnabled = true;
+    public bool airAccelEnabled = false;
+    public bool disableDeathByAltitude = false;
     [HideInInspector]
     public ActiveBase active;
 
@@ -77,6 +82,7 @@ public class RigidbodyController : MonoBehaviour {
                 flyingPivot.localEulerAngles = Vector3.zero;
                 gravity = Vector3.zero;
                 playerSounds.PlayLandingSound();
+                playerSounds.ChangeSkatePitchGround();
             }
             slideForce += slidePower * Time.deltaTime;
             slideForce /= 1 + slideDrag * Time.deltaTime;
@@ -96,7 +102,7 @@ public class RigidbodyController : MonoBehaviour {
             transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed, 0), Space.Self);
             //anim.transform.localEulerAngles = new Vector3(anim.transform.localEulerAngles.x, Input.GetAxis("Horizontal") * 20, -Input.GetAxis("Horizontal") * 20);
 
-            if (InputManager.GetJumpInput())
+            if (InputManager.GetJumpInput() && canJump)
             {
                 anim.SetFloat("back", Random.Range(0.06f, 1));
 
@@ -108,7 +114,7 @@ public class RigidbodyController : MonoBehaviour {
                 gravity = transform.up * gravityForce;
             }
 
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && canJump)
             {
                 anim.SetFloat("back", Random.value);
 
@@ -132,9 +138,23 @@ public class RigidbodyController : MonoBehaviour {
                 col.height = 0.5f;
                 skate.SetSkateBelowFeet();
                 deathTimer = 0;
+                playerSounds.ChangeSkatePitchAir();
             }
 
-            gravityForce -= gravityPower * Time.deltaTime;
+            if (gravityEnabled)
+            {
+                gravityForce -= gravityPower * Time.deltaTime;
+            }
+            else
+            {
+                gravityForce = 0;
+            }
+
+            if (airAccelEnabled)
+            {
+                airForce += slidePower * Time.deltaTime;
+            }
+
             airDirection = airForce * transform.forward;
 
             //Mouse/Touch input
@@ -147,23 +167,36 @@ public class RigidbodyController : MonoBehaviour {
             transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * airSpeed, 0), Space.Self);
             //flyingPivot.localEulerAngles = new Vector3(flyingPivot.localEulerAngles.x, flyingPivot.localEulerAngles.y, -Input.GetAxis("Horizontal") * 20);
 
-            if (InputManager.GetJumpInput() && !active.used)
+
+            if (InputManager.GetJumpInput() && !active.used && canUseSkill)
             {
                 active.Use();
             }
 
-            if (Input.GetButtonDown("Jump") && !active.used)
+            else if (InputManager.GetJumpInput() && active.used && canUseSkill)
+            {
+                active.Disable();
+            }
+
+
+            if (Input.GetButtonDown("Jump") && !active.used && canUseSkill)
             {
                 active.Use();
             }
+
+            else if (Input.GetButtonDown("Jump") && active.used && canUseSkill)
+            {
+                active.Disable();
+            }
+
             gravity = transform.up * gravityForce;
             gravityForce /= 1 + airDrag * Time.deltaTime;
             airForce /= 1 + airDrag * Time.deltaTime;
 
-            if(!Physics.Raycast(transform.position, -transform.up))
+            if (!disableDeathByAltitude && !Physics.Raycast(transform.position, -transform.up))
                 deathTimer += Time.deltaTime;
 
-            if(deathTimer > timeBeforeDying)
+            if (deathTimer > timeBeforeDying)
             {
                 GameManager.Instance.isDead = true;
             }

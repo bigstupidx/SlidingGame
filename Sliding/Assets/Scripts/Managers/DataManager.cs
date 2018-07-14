@@ -50,4 +50,9 @@ public class DataManager : MonoBehaviour {
         Data fileData = JsonUtility.FromJson<Data>(jsonData);
         gameData = fileData;        
     }
+
+    private void OnApplicationQuit()
+    {
+        SaveData();
+    }
 }

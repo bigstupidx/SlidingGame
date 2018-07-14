@@ -4,9 +4,8 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-
 public class RuntimeAsteroidBaker : MonoBehaviour {
-
+    
     Material asteroid;
     Material asteroidOutline;
 
@@ -174,4 +173,6 @@ public class RuntimeAsteroidBaker : MonoBehaviour {
 
         gameObject.AddComponent<MeshCollider>();
     }
+
+
 }
